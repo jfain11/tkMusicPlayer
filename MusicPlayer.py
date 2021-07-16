@@ -5,11 +5,13 @@ from win32api import GetSystemMetrics
 from moviepy.editor import *
 from mutagen.mp3 import MP3
 from PIL import ImageTk, Image
+from random import *
 
 class MusicPlayer:
 
     def __init__(self, master, width, height, pauseImg, playImg, fastForwardImg, rewindImg, shuffleImg):
 
+        self.shuffled = False
         self.paused = False
         self.currentSong = -1
 
@@ -21,6 +23,7 @@ class MusicPlayer:
         for filename in os.listdir(directory):
             self.musicD[num] = (os.path.join(directory, filename))
             num += 1
+        self.numSongs = len(self.musicD)
         #---------------------------------------------------------------------------------------------------------------
 
         # Adjusts the size of the listbox depending on the screens resolution
@@ -57,22 +60,25 @@ class MusicPlayer:
         #---------------------------------------------------------------------------------------------------------------
         self.buttonFrame = tk.Frame(self.master, background="thistle3")
 
+        self.currentSongText = tk.Label(self.buttonFrame, font="helvetica 10", background="thistle3")
+        self.currentSongText.grid(row=0, column=0)
+
         self.songDisplay = tk.Scale(self.buttonFrame, from_=0, to_=self.songLength, orient="horizontal", length=500, highlightbackground="thistle4", highlightthickness=3)
         self.songDisplay.grid(row = 1, column=0, padx=5, pady=(0, 20))
 
-        self.rewindButton = tk.Button(self.buttonFrame, image=rewindImg, font="helvetica 10", command=self.play)
+        self.rewindButton = tk.Button(self.buttonFrame, image=rewindImg, font="helvetica 10", command=self.play, background="white")
         self.rewindButton.grid(row=1, column=1, padx=5, pady=(0, 20))
 
-        self.playButton = tk.Button(self.buttonFrame, image=playImg, font="helvetica 10", command=self.play)
+        self.playButton = tk.Button(self.buttonFrame, image=playImg, font="helvetica 10", command=self.play, background="white")
         self.playButton.grid(row=1, column=2, padx=5, pady=(0, 20))
 
-        self.fastForwardButton = tk.Button(self.buttonFrame, image=fastForwardImg, font="helvetica 10", command=self.skip)
+        self.fastForwardButton = tk.Button(self.buttonFrame, image=fastForwardImg, font="helvetica 10", command=self.skip, background="white")
         self.fastForwardButton.grid(row=1, column=3, padx=5, pady=(0, 20))
 
-        self.pauseButton = tk.Button(self.buttonFrame, image=pauseImg, font="helvetica 10", command=self.pause)
+        self.pauseButton = tk.Button(self.buttonFrame, image=pauseImg, font="helvetica 10", command=self.pause, background="white")
         self.pauseButton.grid(row=1, column=4, padx=5, pady=(0, 20))
 
-        self.shuffleButton = tk.Button(self.buttonFrame, image=shuffleImg, font="helvetica 10")
+        self.shuffleButton = tk.Button(self.buttonFrame, image=shuffleImg, font="helvetica 10", command=self.shuffle, background="white")
         self.shuffleButton.grid(row=1, column=5, padx=5, pady=(0, 20))
 
         self.volumeText = tk.Label(self.buttonFrame, text="volume", font="helvetica 10", background="thistle3")
@@ -110,6 +116,8 @@ class MusicPlayer:
                 self.songDisplay.config(from_=0, to_=self.songLength)
                 pygame.mixer.music.load(r"" + self.musicD[selection])
                 pygame.mixer.music.play()
+                songTitle = self.songListBox.get(selection)
+                self.currentSongText.config(text=songTitle)
 
                 self.updateTime()
     #-------------------------------------------------------------------------------------------------------------------
@@ -126,10 +134,17 @@ class MusicPlayer:
     #-------------------------------------------------------------------------------------------------------------------
     def skip(self):
         if self.currentSong != -1:
-            self.songListBox.selection_clear(0, "end")
-            self.songListBox.select_set(self.currentSong + 1)
-            self.songListBox.activate(self.currentSong + 1)
-            self.play()
+            if not self.shuffled:
+                self.songListBox.selection_clear(0, "end")
+                self.songListBox.select_set(self.currentSong + 1)
+                self.songListBox.activate(self.currentSong + 1)
+                self.play()
+            else:
+                self.songListBox.select_clear(0, "end")
+                num = randint(0, self.numSongs)
+                self.songListBox.select_set(num)
+                self.songListBox.activate(num)
+                self.play()
     #-------------------------------------------------------------------------------------------------------------------
 
 
@@ -141,6 +156,13 @@ class MusicPlayer:
             pygame.mixer.music.rewind()
     #-------------------------------------------------------------------------------------------------------------------
 
+    def shuffle(self):
+        if not self.shuffled:
+            self.shuffled = True
+            self.shuffleButton.config(background="red")
+        else:
+            self.shuffled = False
+            self.shuffleButton.config(background="white")
 
     # called by the pause button
     #-------------------------------------------------------------------------------------------------------------------
