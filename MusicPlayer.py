@@ -106,6 +106,7 @@ class MusicPlayer:
 
         if self.paused and self.currentSong == selection:
             pygame.mixer.music.unpause()
+            self.pauseButton.config(background="white")
             self.updateTime()
         else:
             if selection1 != ():
@@ -170,6 +171,7 @@ class MusicPlayer:
         if pygame.mixer.music.get_busy():
             pygame.mixer.music.pause()
             self.paused = True
+            self.pauseButton.config(background="red")
     #-------------------------------------------------------------------------------------------------------------------
 
 
