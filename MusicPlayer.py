@@ -55,7 +55,7 @@ class MusicPlayer:
 
         # Button Frame
         #---------------------------------------------------------------------------------------------------------------
-        self.buttonFrame = tk.Frame(self.master, background="red")
+        self.buttonFrame = tk.Frame(self.master, background="thistle3")
 
         self.songDisplay = tk.Scale(self.buttonFrame, from_=0, to_=self.songLength, orient="horizontal", length=500, highlightbackground="thistle4", highlightthickness=3)
         self.songDisplay.grid(row = 1, column=0, padx=5, pady=(0, 20))
