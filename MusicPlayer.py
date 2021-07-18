@@ -7,9 +7,18 @@ from mutagen.mp3 import MP3
 from PIL import ImageTk, Image
 from random import *
 
+# Add MP3 Downloader
+
+# Fix time updating wrong incorrectly after paused.
+
+# Fix shuffle from playing the same song twice in a row
+
+# Add capability to add songs from other folders
+
+
 class MusicPlayer:
 
-    def __init__(self, master, width, height, pauseImg, playImg, fastForwardImg, rewindImg, shuffleImg):
+    def __init__(self, master, width, height, pauseImg, playImg, fastForwardImg, rewindImg, shuffleImg, backgroundImg):
 
         self.shuffled = False
         self.paused = False
@@ -86,6 +95,10 @@ class MusicPlayer:
 
         self.volumeScale = tk.Scale(self.buttonFrame, from_=0, to_=100, orient="horizontal", highlightbackground="thistle4", highlightthickness=3, command=self.updateVolume)
         self.volumeScale.grid(row=1, column=6, padx=10, pady=(0, 20))
+
+        self.songDownloaderButton = tk.Button(self.buttonFrame, text="Song Downloader", font="helvetica 10", command=self.new_window,
+                                       background="white")
+        self.songDownloaderButton.grid(row=1, column=7, padx=5, pady=(0, 20))
 
         self.buttonFrame.grid(row=2, column=0, pady=10)
         #---------------------------------------------------------------------------------------------------------------
@@ -190,10 +203,16 @@ class MusicPlayer:
     #-------------------------------------------------------------------------------------------------------------------
 
 
-    # Opens the add homework page
-    #def new_window(self):
-        #self.newWindow = tk.Toplevel(self.master)
-        #self.app = AddHomeworkPage(self.newWindow)
+    # Song Downloader Page
+    def new_window(self):
+        self.newWindow = tk.Toplevel(self.master)
+        self.app = SongDownloaderPage(self.newWindow)
+
+
+class SongDownloaderPage:
+    def __init__(self, master):
+        self.master = master
+
 
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -222,6 +241,8 @@ def main():
     playImg = ImageTk.PhotoImage(i4)
     i5 = Image.open("icons8-shuffle-32.png")
     shuffleImg = ImageTk.PhotoImage(i5)
+    i6 = Image.open("background1.png")
+    backgroundImg = ImageTk.PhotoImage(i6)
 
     # sets the size of the window to match the users resolution
     root.geometry(f"{screenWidth}x{screenHeight}")
@@ -229,7 +250,8 @@ def main():
     # sets the background of the root window
     root.config(background="thistle3")
 
-    app = MusicPlayer(root, screenWidth, screenHeight, pauseImg, playImg, fastForwardImg, rewindImg, shuffleImg)
+
+    app = MusicPlayer(root, screenWidth, screenHeight, pauseImg, playImg, fastForwardImg, rewindImg, shuffleImg, backgroundImg)
 
     # refreshes the window
     root.mainloop()
