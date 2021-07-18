@@ -211,52 +211,59 @@ class MusicPlayer:
         self.app = SongDownloaderPage(self.newWindow)
 
 
-
+# Song Downloader
 class SongDownloaderPage:
     def __init__(self, master):
 
+
+        # Song Downloader Main Frame
+        #---------------------------------------------------------------------------------------------------------------
         self.master = master
         self.frame = tk.Frame(self.master, width=700, height=500, background="thistle3")
 
-        self.text1 = tk.Label(self.frame, text="This downloader works by taking songs/videos from YouTube via their URL and converting them to MP3 files.", background="thistle3")
+        self.text1 = tk.Label(self.frame, text="This downloader works by taking songs/videos from YouTube via their URL and converting them to MP3 files.", background="thistle3", font="helvetica 9 bold")
         self.text1.grid(pady=(20, 0), padx=20)
-
-        self.text2 = tk.Label(self.frame, text="The MP3 files are installed on your computer in a folder name MusicMasterFolder.", background="thistle3")
+        self.text2 = tk.Label(self.frame, text="The MP3 files are installed on your computer in a folder name MusicMasterFolder.", background="thistle3", font="helvetica 9 bold")
         self.text2.grid(pady=(5, 0))
-
-        self.text3 = tk.Label(self.frame, text="The first time this program is ran the folder will automatically be created at path C:\MusicMasterFolder.", background="thistle3")
+        self.text3 = tk.Label(self.frame, text="The first time this program is ran the folder will automatically be created at path C:\MusicMasterFolder.", background="thistle3", font="helvetica 9 bold")
         self.text3.grid(pady=(5, 0))
-
-        self.text4 = tk.Label(self.frame, text="This downloader can be used to install entire playlist or just individual songs.", background="thistle3")
+        self.text4 = tk.Label(self.frame, text="This downloader can be used to install entire playlist or just individual songs.", background="thistle3", font="helvetica 9 bold")
         self.text4.grid(pady=(5, 0))
 
 
-        self.playlistFrame = tk.Frame(self.frame, highlightbackground="thistle4", highlightthickness=3, background="thistle3")
 
-        self.text4 = tk.Label(self.playlistFrame, text="ENTER PLAYLIST URL", background="thistle3")
-        self.text4.grid(pady=(5, 0))
+        self.playlistFrame = tk.Frame(self.frame,  background="thistle2", relief="raised", bd=10)
 
+        self.text4 = tk.Label(self.playlistFrame, text="ENTER PLAYLIST URL", background="thistle2", font="helvetica 10 bold")
+        self.text4.grid(pady=(8, 2))
         self.playlistUrlEntry = tk.Entry(self.playlistFrame, width=80)
-        self.playlistUrlEntry.grid(pady=(0, 0))
+        self.playlistUrlEntry.grid(pady=(0, 0), padx=10)
+        self.playlistButton = tk.Button(self.playlistFrame, text="Download Playlist", font="helvetica 10")
+        self.playlistButton.grid(pady=(10, 10))
 
-        self.playlistButton = tk.Button(self.playlistFrame, text="Download Playlist")
-        self.playlistButton.grid(pady=(10, 0))
-
-        self.playlistFrame.grid()
+        self.playlistFrame.grid(pady=(30, 10))
 
 
-        self.text5 = tk.Label(self.frame, text="ENTER SONG URL", background="thistle3")
-        self.text5.grid(pady=(40, 0))
 
-        self.songUrlEntry = tk.Entry(self.frame, width=80)
-        self.songUrlEntry.grid(pady=(0, 0))
+        self.songFrame = tk.Frame(self.frame, background="thistle2", relief="raised", bd=10)
 
-        self.songButton = tk.Button(self.frame, text="Download Song")
-        self.songButton.grid(pady=(10, 0))
+        self.text5 = tk.Label(self.songFrame, text="ENTER SONG URL", background="thistle2", font="helvetica 10 bold")
+        self.text5.grid(pady=(8, 2))
+        self.songUrlEntry = tk.Entry(self.songFrame, width=80)
+        self.songUrlEntry.grid(pady=(0, 0), padx=10)
+        self.songButton = tk.Button(self.songFrame, text="Download Song", font="helvetica 10")
+        self.songButton.grid(pady=(10, 10))
+
+        self.songFrame.grid(pady=(20, 40))
 
 
 
         self.frame.grid()
+    #-------------------------------------------------------------------------------------------------------------------
+
+
+
+
 
 
 
