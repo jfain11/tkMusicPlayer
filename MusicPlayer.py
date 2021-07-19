@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter.ttk import *
 import os
 import pygame
 from win32api import GetSystemMetrics
@@ -6,6 +7,9 @@ from moviepy.editor import *
 from mutagen.mp3 import MP3
 from PIL import ImageTk, Image
 from random import *
+from pytube import YouTube, Playlist
+from time import *
+import subprocess
 
 # Add MP3 Downloader
 
@@ -238,7 +242,7 @@ class SongDownloaderPage:
         self.text4.grid(pady=(8, 2))
         self.playlistUrlEntry = tk.Entry(self.playlistFrame, width=80)
         self.playlistUrlEntry.grid(pady=(0, 0), padx=10)
-        self.playlistButton = tk.Button(self.playlistFrame, text="Download Playlist", font="helvetica 10")
+        self.playlistButton = tk.Button(self.playlistFrame, text="Download Playlist", font="helvetica 10", command=self.downloadPlaylist)
         self.playlistButton.grid(pady=(10, 10))
 
         self.playlistFrame.grid(pady=(30, 10))
@@ -251,15 +255,84 @@ class SongDownloaderPage:
         self.text5.grid(pady=(8, 2))
         self.songUrlEntry = tk.Entry(self.songFrame, width=80)
         self.songUrlEntry.grid(pady=(0, 0), padx=10)
-        self.songButton = tk.Button(self.songFrame, text="Download Song", font="helvetica 10")
+        self.songButton = tk.Button(self.songFrame, text="Download Song", font="helvetica 10", command=self.downloadSong)
         self.songButton.grid(pady=(10, 10))
 
-        self.songFrame.grid(pady=(20, 40))
+        self.songFrame.grid(pady=(20, 20))
+
+
+        self.progressBar = Progressbar(self.frame, orient="horizontal", length=200, mode="determinate")
+        self.progressBar.grid(pady=(0, 30))
+
 
 
 
         self.frame.grid()
+
     #-------------------------------------------------------------------------------------------------------------------
+
+    def downloadPlaylist(self):
+        if len(self.playlistUrlEntry.get()) != 0:
+            destination = r"C:\MusicTest"
+            playlist = Playlist(self.playlistUrlEntry.get())
+            numOfSongs = len(playlist)
+            num = 100 / numOfSongs
+            temp = 0
+
+
+
+            for url in playlist:
+
+
+                sleep(1)
+                try:
+                    yt = YouTube(url)
+                    video = yt.streams.filter(only_audio=True).first()
+                    video.download(output_path=destination)
+                except:
+                    print(url)
+                #base, ext = os.path.splitext(out_file)
+                #new_file = base + '.mp3'
+                #os.rename(out_file, new_file)
+
+                #subprocess.run(['ffmpeg', '-i', os.path.join(destination, out_file), os.path.join(destination, new_file)])
+
+                temp += num
+                self.progressBar["value"] = temp
+                self.master.update_idletasks()
+
+
+    def downloadSong(self):
+        if len(self.songUrlEntry.get()) != 0:
+
+            self.progressBar["value"] = 20
+            self.master.update_idletasks()
+
+            destination = r"C:\MusicMasterFolder"
+            yt = YouTube(self.songUrlEntry.get())
+            video = yt.streams.filter(only_audio=True).first()
+
+            self.progressBar["value"] = 40
+            self.master.update_idletasks()
+
+            out_file = video.download(output_path=destination)
+
+            self.progressBar["value"] = 60
+            self.master.update_idletasks()
+
+            base, ext = os.path.splitext(out_file)
+            new_file = base + '.mp3'
+
+            self.progressBar["value"] = 80
+            self.master.update_idletasks()
+
+            os.rename(out_file, new_file)
+
+            self.songButton.config(state="normal")
+
+            self.progressBar["value"] = 100
+            self.master.update_idletasks()
+
 
 
 
