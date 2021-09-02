@@ -284,19 +284,23 @@ class SongDownloaderPage:
             for url in playlist:
 
 
+
+
+                yt = YouTube(url)
+
+                #stream = video.streams.get_lowest_resolution()
+                #stream.download(output_path=out_dir, skip_existing=True)
+                #mp4_path = out_dir + '/' + stream.default_filename
+
+                video = yt.streams.get_lowest_resolution()
+                out_file = video.download(output_path=destination)
+
+
+                base, ext = os.path.splitext(out_file)
+                new_file = base + '.mp3'
+                os.rename(out_file, new_file)
+
                 sleep(1)
-                try:
-                    yt = YouTube(url)
-                    video = yt.streams.filter(only_audio=True).first()
-                    video.download(output_path=destination)
-                except:
-                    print(url)
-                #base, ext = os.path.splitext(out_file)
-                #new_file = base + '.mp3'
-                #os.rename(out_file, new_file)
-
-                #subprocess.run(['ffmpeg', '-i', os.path.join(destination, out_file), os.path.join(destination, new_file)])
-
                 temp += num
                 self.progressBar["value"] = temp
                 self.master.update_idletasks()
